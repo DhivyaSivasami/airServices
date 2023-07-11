@@ -11,13 +11,13 @@
 #
 # Happy Coding!
 
-service: airServices
+service: airservices
 plugins:
   - fullstack-serverless
 custom:
    fullstack:
-    bucketName: airServices-deploy
-    distributionFolder: ./dist/air-service
+    bucketName: airservices-deploy
+    distributionFolder: ./dist/airService
     indexDocument: index.html
     compressWebContent: true
     clientCommand: npm run build
@@ -48,9 +48,11 @@ functions:
           path: /getFlightDetail
           method: get
           authorizer:
-            name: MyPrivateAuthorizer
-            arn : arn:aws:cognito-idp:us-east-1:571922294761:userpool/us-east-1_INRwcVukR
-          #  arn: !GetAtt CognitoUserPool.Arn
+            type: COGNITO_USER_POOLS
+            name : test
+            arn : arn:aws:cognito-idp:us-east-1:571922294761:userpool/us-east-1_tKiNPj5VA
+             #     arn:aws:cognito-idp:us-east-1:571922294761:userpool/us-east-1_NS0kJPEc6
+           # arn: !GetAtt CognitoUserPool.Arn
           cors:
             origin: "*"
             headers:
@@ -71,6 +73,14 @@ functions:
               - sentry-trace
               - User-Agent
 resources:
+  extensions: 
+    WebAppS3Bucket:
+        Properties :
+          PublicAccessBlockConfiguration:
+            BlockPublicAcls: False
+            BlockPublicPolicy: False
+            IgnorePublicAcls: False
+            RestrictPublicBuckets: False
   Resources:
     flightDetails:
         Type : AWS::DynamoDB::Table
@@ -135,3 +145,4 @@ resources:
             Username: dhivyasivasami@gmail.com
             UserPoolId: 
               Ref: CognitoUserPool
+    
