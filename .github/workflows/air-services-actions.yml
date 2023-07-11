@@ -1,0 +1,23 @@
+name: Deploy Air Services Static Website
+
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  deploy:
+    name: Build and Deploy Static Website
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "14.x"
+      - name: Install Serverless Framework
+        run: npm install -g serverless
+      - name: Install Packages
+        run: npm install
+      - name: Serverless AWS Authentication
+        run: sls config credentials --provider aws --key AKIAYKKJZU7U5EXXSWW7  --secret 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
+      - name: Deploy Air Services Static Website
+        run: sls deploy --region us-east-1 --stage dev

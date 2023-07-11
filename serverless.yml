@@ -1,0 +1,137 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: airServices
+plugins:
+  - fullstack-serverless
+custom:
+   fullstack:
+    bucketName: airServices-deploy
+    distributionFolder: ./dist/air-service
+    indexDocument: index.html
+    compressWebContent: true
+    clientCommand: npm run build
+    clientSrcPath: ./
+    noConfirm: true                         
+provider:
+  name: aws
+  runtime: nodejs14.x
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action:        
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: "*"
+  environment :
+    TableName : flightDetails
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - http:
+          path: /getFlightDetail
+          method: get
+          authorizer:
+            name: MyPrivateAuthorizer
+            arn : arn:aws:cognito-idp:us-east-1:571922294761:userpool/us-east-1_INRwcVukR
+          #  arn: !GetAtt CognitoUserPool.Arn
+          cors:
+            origin: "*"
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - x-api-key
+              - version
+              - sessionId
+              - sessionid
+              - Accept
+              - Referer
+              - sec-ch-ua
+              - sec-ch-ua-mobile
+              - sec-ch-ua-platform
+              - sentry-trace
+              - User-Agent
+resources:
+  Resources:
+    flightDetails:
+        Type : AWS::DynamoDB::Table
+        DeletionPolicy: Retain
+        Properties:
+            AttributeDefinitions:
+                - AttributeName : flightId
+                  AttributeType : S
+                - AttributeName : departDate
+                  AttributeType : S
+            KeySchema:
+              - AttributeName : flightId
+                KeyType : HASH
+              - AttributeName : departDate
+                KeyType : RANGE
+            ProvisionedThroughput:
+                ReadCapacityUnits: 1
+                WriteCapacityUnits: 1
+            TableName : flightDetails
+    CognitoUserPool:
+        Type: AWS::Cognito::UserPool
+        Properties:
+          UserPoolName: dev-user-pool
+          UsernameAttributes:
+            - email
+          AutoVerifiedAttributes:
+            - email 
+    CognitoUserPoolClient:
+        Type: AWS::Cognito::UserPoolClient
+        Properties:
+          ClientName: dev-user-pool-client
+          UserPoolId:
+            Ref: CognitoUserPool
+          CallbackURLs:
+             - https://oauth.pstmn.io/v1/callback
+          LogoutURLs: 
+             - http://localhost:4200/
+          ExplicitAuthFlows:
+            - ALLOW_CUSTOM_AUTH
+            - ALLOW_REFRESH_TOKEN_AUTH
+            - ALLOW_USER_PASSWORD_AUTH
+            - ALLOW_USER_SRP_AUTH
+          SupportedIdentityProviders: [ "COGNITO" ]
+          AllowedOAuthFlows : [code]
+          AllowedOAuthScopes : [aws.cognito.signin.user.admin,email,openid,phone,profile]
+         # AllowedOAuthScopes: [ "Email" ]
+          GenerateSecret: false
+    CognitoUserPoolDomain:  
+        Type: AWS::Cognito::UserPoolDomain
+        Properties: 
+            Domain: dev-user-pool-dhivya
+            UserPoolId: 
+                Ref: CognitoUserPool
+    CognitoUserPoolDomainUser:  
+        Type: AWS::Cognito::UserPoolUser
+        Properties: 
+            DesiredDeliveryMediums: 
+                - EMAIL
+            UserAttributes: 
+                - Name: email
+                  Value: dhivyasivasami@gmail.com
+            Username: dhivyasivasami@gmail.com
+            UserPoolId: 
+              Ref: CognitoUserPool
