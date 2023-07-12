@@ -15,6 +15,10 @@ jobs:
           node-version: "16.x"
       - name: Install Serverless Framework
         run: npm install -g serverless
+      - name: Clean Cache
+        run: npm cache clean --force
+      - name: Verify Cache
+        run: npm cache verify
       - name: Install Packages 1
         run: npm config set force false
       - name: Install Packages 2
