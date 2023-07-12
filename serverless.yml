@@ -20,8 +20,6 @@ custom:
     distributionFolder: ./dist/airService
     indexDocument: index.html
     compressWebContent: true
-    clientCommand: npm run build
-    clientSrcPath: ./
     noConfirm: true                         
 provider:
   name: aws
