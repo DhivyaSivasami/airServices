@@ -15,7 +15,11 @@ jobs:
           node-version: "16.x"
       - name: Install Serverless Framework
         run: npm install -g serverless
-      - name: Install Packages
+      - name: Install Packages 1
+        run: npm config set force false
+      - name: Install Packages 2
+        run: npm config get force
+      - name: Install cache veriify
         run: npm install --force
       - name: FullStack plugin
         run: serverless plugin install -n fullstack-serverless
