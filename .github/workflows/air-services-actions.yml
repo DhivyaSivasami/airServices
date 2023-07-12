@@ -22,6 +22,6 @@ jobs:
       - name: FullStack plugin
         run: serverless plugin install -n fullstack-serverless
       - name: Serverless AWS Authentication
-        run: sls config credentials --provider aws --key AKIAYKKJZU7U5EXXSWW7  --secret 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
+        run: sls config credentials --provider aws --key ${{ secrets.AWS_KEY }}  --secret ${{ secrets.AWS_SECRET }} -o
       - name: Deploy Air Services Static Website
         run: sls deploy --region us-east-1 
