@@ -17,7 +17,7 @@ plugins:
 custom:
    fullstack:
     bucketName: airservices-deploy
-    distributionFolder: ./dist/airService
+    distributionFolder: ./dist/air-service
     indexDocument: index.html
     compressWebContent: true
     noConfirm: true                         
