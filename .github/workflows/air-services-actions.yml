@@ -10,13 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v1
         with:
           node-version: "16.x"
       - name: Install Serverless Framework
         run: npm install -g serverless
-      - name: Install Packages
-        run: npm install
+      - name: Clean Cache
+        run: npm cache clean --force
+      - name: Verify Cache
+        run: npm cache verify
       - name: FullStack plugin
         run: serverless plugin install -n fullstack-serverless
       - name: Serverless AWS Authentication
