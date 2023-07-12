@@ -16,7 +16,7 @@ jobs:
       - name: Install Serverless Framework
         run: npm install -g serverless
       - name: Install Packages
-        run: npm install
+        run: npm install --force
       - name: FullStack plugin
         run: serverless plugin install -n fullstack-serverless
       - name: Serverless AWS Authentication
