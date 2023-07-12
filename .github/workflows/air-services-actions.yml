@@ -19,12 +19,8 @@ jobs:
         run: npm cache clean --force
       - name: Verify Cache
         run: npm cache verify
-      - name: Install Packages 1
-        run: npm config set force false
-      - name: Install Packages 2
-        run: npm config get force
-      - name: Install cache veriify
-        run: npm install --force
+      - name: Install npm
+        run: npm install -force
       - name: FullStack plugin
         run: serverless plugin install -n fullstack-serverless
       - name: Serverless AWS Authentication
